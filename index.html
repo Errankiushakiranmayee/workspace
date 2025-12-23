@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SonicShield Pro | Safety Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0d0d0d;
+            --card: #1a1a1a;
+            --orange: #ff9500;
+            --danger: #ff4d4d;
+            --success: #00e676;
+            --text: #ffffff;
+        }
+
+        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; display: flex; justify-content: center; padding: 10px; }
+        .app-container { width: 100%; max-width: 420px; background: var(--card); border-radius: 25px; min-height: 720px; position: relative; box-shadow: 0 30px 60px rgba(0,0,0,0.8); border: 1px solid #333; overflow: hidden; }
+        .progress-bar { height: 6px; background: var(--orange); width: 16%; transition: 0.5s ease; }
+
+        .page { display: none; padding: 25px; animation: slideIn 0.3s ease-out; }
+        .page.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { font-family: 'Orbitron', sans-serif; color: var(--orange); font-size: 1.3rem; margin-top: 0; }
+        .hero-img { width: 100%; height: 200px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #444; object-fit: cover; }
+
+        /* Easy Guidelines Styling */
+        .guide-card { background: #252525; padding: 15px; border-radius: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px; border-left: 4px solid var(--orange); }
+        .guide-card i { font-size: 1.5rem; color: var(--orange); width: 30px; text-align: center; }
+        .guide-card h4 { margin: 0; font-size: 1rem; color: var(--orange); }
+        .guide-card p { margin: 2px 0 0; font-size: 0.9rem; }
+
+        /* Quiz Styling */
+        .quiz-option { background: #2a2a2a; padding: 16px; margin: 10px 0; border-radius: 12px; cursor: pointer; border: 1px solid #444; transition: 0.2s; }
+        .correct { background: var(--success) !important; color: black; font-weight: bold; }
+        .wrong { background: var(--danger) !important; }
+
+        .btn-next { background: var(--orange); color: black; border: none; padding: 16px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; font-size: 1rem; margin-top: 10px; }
+        input { width: 100%; padding: 15px; box-sizing: border-box; border-radius: 10px; border: 2px solid var(--orange); background: #000; color: white; font-size: 24px; text-align: center; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="progress-bar" id="pb"></div>
+
+    <div id="step1" class="page active">
+        <img src="https://images.pexels.com/photos/257736/pexels-photo-257736.jpeg?auto=compress&cs=tinysrgb&w=400" class="hero-img">
+        <h2>1. Risk Analyzer</h2>
+        <p>Check the noise level for Scenario 37.</p>
+        <input type="number" id="dbInput" placeholder="Enter dB">
+        <div id="riskResult" style="padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; margin-bottom: 15px; display: none; border: 1px solid #444;"></div>
+        <button class="btn-next" onclick="goToStep(2)">NEXT: SAFETY RULES</button>
+    </div>
+
+    <div id="step2" class="page">
+        <img src="https://images.pexels.com/photos/1010373/pexels-photo-1010373.jpeg?auto=compress&cs=tinysrgb&w=400" class="hero-img">
+        <h2>2. Easy Rules</h2>
+        <div class="guide-card"><i class="fas fa-shield-alt"></i><div><h4>Rule 1: Wear It</h4><p>Always wear earmuffs if noise is high.</p></div></div>
+        <div class="guide-card"><i class="fas fa-user-clock"></i><div><h4>Rule 2: Rest It</h4><p>Take a 15-min quiet break every 2 hours.</p></div></div>
+        <div class="guide-card"><i class="fas fa-eye"></i><div><h4>Rule 3: Check It</h4><p>Look for the "Danger Zone" signs.</p></div></div>
+        <div class="guide-card"><i class="fas fa-comment-slash"></i><div><h4>Rule 4: Mute It</h4><p>Shut machines down before repairing.</p></div></div>
+        <button class="btn-next" onclick="goToStep(3)">PROCEED TO QUIZ</button>
+    </div>
+
+    <div id="step3" class="page">
+        <h2>Q1: Danger Level?</h2>
+        <p>At what level do you need protection?</p>
+        <div class="quiz-option" onclick="handleQuiz(this, false, 4)">50 dB (Normal)</div>
+        <div class="quiz-option" onclick="handleQuiz(this, true, 4)">85 dB (Heavy Machine)</div>
+        <div class="quiz-option" onclick="handleQuiz(this, false, 4)">20 dB (Whisper)</div>
+    </div>
+
+    <div id="step4" class="page">
+        <h2>Q2: Which Gear?</h2>
+        <p>Which PPE is best for hearing safety?</p>
+        <div class="quiz-option" onclick="handleQuiz(this, false, 5)">Leather Gloves</div>
+        <div class="quiz-option" onclick="handleQuiz(this, true, 5)">Industrial Earmuffs</div>
+        <div class="quiz-option" onclick="handleQuiz(this, false, 5)">Safety Glasses</div>
+    </div>
+
+    <div id="step5" class="page">
+        <h2>Q3: Feeling Pain?</h2>
+        <p>What if your ears start hurting?</p>
+        <div class="quiz-option" onclick="handleQuiz(this, true, 6)">Exit Area Immediately</div>
+        <div class="quiz-option" onclick="handleQuiz(this, false, 6)">Finish your shift first</div>
+        <div class="quiz-option" onclick="handleQuiz(this, false, 6)">Take your muffs off</div>
+    </div>
+
+    <div id="step6" class="page" style="text-align: center;">
+        <img src="https://images.pexels.com/photos/3745234/pexels-photo-3745234.jpeg?auto=compress&cs=tinysrgb&w=400" class="hero-img">
+        <i class="fas fa-check-circle" style="font-size: 60px; color: var(--success); margin-bottom: 15px;"></i>
+        <h2>You are Safe!</h2>
+        <p>Scenario 37 Safety Training is now complete. You may enter the work zone.</p>
+        <button class="btn-next" onclick="location.reload()"><i class="fas fa-home"></i> BACK TO HOME</button>
+    </div>
+</div>
+
+<script>
+    function goToStep(step) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('step' + step).classList.add('active');
+        document.getElementById('pb').style.width = (step / 6) * 100 + '%';
+    }
+
+    function handleQuiz(element, isCorrect, nextStep) {
+        if (isCorrect) {
+            element.classList.add('correct');
+            setTimeout(() => { goToStep(nextStep); }, 600);
+        } else {
+            element.classList.add('wrong');
+            setTimeout(() => { element.classList.remove('wrong'); }, 400);
+        }
+    }
+
+    document.getElementById('dbInput').addEventListener('input', function(e) {
+        const val = e.target.value;
+        const res = document.getElementById('riskResult');
+        res.style.display = "block";
+        if(val >= 85) {
+            res.innerText = "🚨 DANGER: PPE REQUIRED";
+            res.style.color = "#ff4d4d";
+        } else if (val > 0) {
+            res.innerText = "✅ SAFE LIMITS";
+            res.style.color = "#00e676";
+        } else { res.style.display = "none"; }
+    });
+</script>
+</body>
+</html>
